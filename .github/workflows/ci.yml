@@ -1,0 +1,63 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  templates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - uses: shivammathur/setup-php@v2
+        with: { php-version: "8.3", extensions: curl }
+      - uses: actions/setup-go@v5
+        with: { go-version: "1.22" }
+      - uses: ruby/setup-ruby@v1
+        with: { ruby-version: "3.3" }
+      - run: pip install requests
+      - name: Run client tests against mock bKash server
+        run: tests/run_all.sh
+      - name: Type-check Node templates
+        run: |
+          mkdir -p /tmp/tscheck && cd /tmp/tscheck && npm init -y >/dev/null
+          npm i typescript @types/node @types/express express redis >/dev/null
+          cp $GITHUB_WORKSPACE/plugins/bkash-payment-gateway/skills/bkash-payment-gateway/templates/node/*.ts .
+          npx tsc --noEmit --strict --target es2022 --module nodenext --moduleResolution nodenext --skipLibCheck *.ts
+
+  java:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+      - run: |
+          for a in jackson-databind jackson-core jackson-annotations; do
+            curl -sSfLO https://repo1.maven.org/maven2/com/fasterxml/jackson/core/$a/2.17.2/$a-2.17.2.jar
+          done
+          javac -cp "*" -d out plugins/bkash-payment-gateway/skills/bkash-payment-gateway/templates/java/BkashClient.java
+
+  dotnet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: "8.0.x" }
+      - run: |
+          dotnet new classlib -o /tmp/bk -n Bk
+          rm /tmp/bk/Class1.cs
+          cp plugins/bkash-payment-gateway/skills/bkash-payment-gateway/templates/csharp/BkashClient.cs /tmp/bk/
+          dotnet build /tmp/bk
+
+  manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - run: npx -y @anthropic-ai/claude-code plugin validate . --strict
+      - run: npx -y @anthropic-ai/claude-code plugin validate ./plugins/bkash-payment-gateway --strict

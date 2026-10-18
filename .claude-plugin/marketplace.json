@@ -1,0 +1,27 @@
+{
+  "name": "bkash-skills",
+  "owner": {
+    "name": "Md Sumon",
+    "url": "https://github.com/sumoncse19"
+  },
+  "metadata": {
+    "description": "Open-source Claude skills for integrating the bKash Payment Gateway (PGW v2 Tokenized Checkout) in any stack.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "bkash-payment-gateway",
+      "source": "./plugins/bkash-payment-gateway",
+      "description": "Implement, review or debug bKash PGW v2 Tokenized Checkout: token management, create/execute payments, agreements, auth & capture, refunds, query/search, IPN webhooks and go-live — with drop-in clients for Node, PHP, Python, Java, C#, Go and Ruby.",
+      "author": {
+        "name": "Md Sumon",
+        "url": "https://github.com/sumoncse19"
+      },
+      "homepage": "https://github.com/sumoncse19/bkash-claude-skills",
+      "repository": "https://github.com/sumoncse19/bkash-claude-skills",
+      "license": "MIT",
+      "keywords": ["bkash", "payment-gateway", "tokenized-checkout", "bangladesh", "fintech", "webhook", "refund"],
+      "category": "development"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "bkash-payment-gateway",
+  "version": "1.0.0",
+  "description": "Claude skill for implementing the bKash Payment Gateway v2 (Tokenized Checkout, Agreement, Auth & Capture, Refund, Query/Search, IPN) in any website or platform.",
+  "author": {
+    "name": "Md Sumon",
+    "url": "https://github.com/sumoncse19"
+  },
+  "homepage": "https://github.com/sumoncse19/bkash-claude-skills",
+  "repository": "https://github.com/sumoncse19/bkash-claude-skills",
+  "license": "MIT",
+  "keywords": ["bkash", "payment-gateway", "tokenized-checkout", "bangladesh"]
+}
